@@ -33,9 +33,9 @@ namespace Lab_5
         //Open
         private void button1_Click(object sender, EventArgs e)
         {
-            OopenForm OopenForm = new OopenForm();
-            OopenForm.ShowDialog();
-            path = OopenForm.getString() + ".txt";
+            openFileDialog1.ShowDialog();
+            path = openFileDialog1.FileName;
+            
             df.setPath(path);
             compress.setPath(path);
             encrypting.setPath(path);
@@ -53,28 +53,31 @@ namespace Lab_5
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (encryption && compression)
-            {
-                text = encrypting.Decrypt();
-                text = compress.Unzip();                
+            {                
+                text = encrypting.Decrypt(path);
+                df.writeFile(text);
+                //richTextBox1.Text = df.readFile();
+                text = compress.decompress(path);               
                 richTextBox1.Text = text;
-            }
-
-            if (encryption)
-            {
-                richTextBox1.Text = encrypting.Decrypt();
             }
             else
             {
-                if (compression)
+                if (encryption)
                 {
-                    richTextBox1.Text = compress.Unzip();
+                    richTextBox1.Text = encrypting.Decrypt(path);
                 }
                 else
                 {
-                    richTextBox1.Text = df.readFile();
+                    if (compression)
+                    {
+                        richTextBox1.Text = compress.decompress(path);
+                    }
+                    else
+                    {
+                        richTextBox1.Text = df.readFile();
+                    }
                 }
-            }
-
+            }            
         }
 
         //Compress
@@ -98,28 +101,30 @@ namespace Lab_5
         private void saveToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             if(encryption && compression)
-            {
-                text = richTextBox1.Text;
-                text = encrypting.Encrypt(text);
-                compress.Zip(text);
-            }
-
-            if (encryption)
-            {
-                encrypting.Encrypt(richTextBox1.Text);                
+            {                       
+                compress.compress(richTextBox1.Text, path);                
+                text = df.readFile();
+                text = encrypting.Encrypt(text, path);
+                //df.writeFile(text);
             }
             else
             {
-                if (compression)
+                if (encryption)
                 {
-                    compress.Zip(richTextBox1.Text);
+                    encrypting.Encrypt(richTextBox1.Text, path);
                 }
                 else
                 {
-                    df.writeFile(richTextBox1.Text);
+                    if (compression)
+                    {
+                        compress.compress(richTextBox1.Text, path);
+                    }
+                    else
+                    {
+                        df.writeFile(richTextBox1.Text);
+                    }
                 }
-            }
-
+            }                       
         }
     }
 }
