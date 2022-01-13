@@ -79,7 +79,7 @@ namespace Lab_5
             }
             catch
             {
-                return "er";
+                return "";
             }
             
         }
@@ -88,7 +88,7 @@ namespace Lab_5
     class Encrypting : Default
     {
 
-        string hash = "qwe12@v";
+        string hash = "qwe72@v";
 
         public string Encrypt(string input, string path)
         {
@@ -97,7 +97,8 @@ namespace Lab_5
             using (MD5CryptoServiceProvider m = new MD5CryptoServiceProvider())
             {
                 byte[] key = m.ComputeHash(UTF8Encoding.UTF8.GetBytes(hash));
-                using (TripleDESCryptoServiceProvider tripDes = new TripleDESCryptoServiceProvider() { Key = key, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
+                using (TripleDESCryptoServiceProvider tripDes = new TripleDESCryptoServiceProvider() 
+                { Key = key, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
                 {
                     ICryptoTransform transform = tripDes.CreateEncryptor();
                     byte[] res = transform.TransformFinalBlock(bytes, 0, bytes.Length);
@@ -116,7 +117,8 @@ namespace Lab_5
                 using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
                 {
                     byte[] key = md5.ComputeHash(System.Text.Encoding.Default.GetBytes(hash));
-                    using (TripleDESCryptoServiceProvider tripDes = new TripleDESCryptoServiceProvider() { Key = key, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
+                    using (TripleDESCryptoServiceProvider tripDes = new TripleDESCryptoServiceProvider()
+                    { Key = key, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
                     {
                         ICryptoTransform transform = tripDes.CreateDecryptor();
                         byte[] result = transform.TransformFinalBlock(data, 0, data.Length);
